@@ -70,13 +70,11 @@ fn main() {
                 let stacked_row = cargo_rows_stacked.pop();
                 let crate_row = stacked_row.unwrap(); // e.g. [R]         [P] [G]     [J] [P] [T]
                 for (j, &csi) in crate_stack_indexes.iter().enumerate() {
-                    //let &current_vector= all_stacks.get(j).unwrap(); // filter to get the jth element (the number of the stack , from 1 to 9)
                     let chars: Vec<char> = crate_row.chars().collect();
                     let &current_value = chars.get(csi).unwrap();
                     if current_value != ' ' {
                         // push the value only if present
                         add_char_to_stack(&mut all_stacks, j, current_value);
-                        //current_vector.push(current_value);
                     }
                 }
             }
