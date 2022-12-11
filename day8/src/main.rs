@@ -4,10 +4,6 @@ use std::fs;
 use std::fs::File;
 use std::io::{Write, BufReader, BufRead, Error};
 
-pub struct Matrix {
-    rows: [[usize; 3]; 3],
-}
-
 fn main() {
     let args: Vec<String> = env::args().collect();
 
@@ -48,7 +44,17 @@ fn main() {
         i += 1;
     }
 
+    let counter = get_visible_trees(&matrix);
+    println!("Counter: {counter}");
+
+    let viewing_distance = get_max_viewing_distance(&matrix);
+    println!("Viewing distance: {viewing_distance}");
+}
+
+fn get_visible_trees(matrix: &Vec<Vec<u32>>) -> i32 {
+
     let mut counter = 0;
+
     for i in 0..matrix.len() {
         for j in 0..matrix.len() {
             let elem = matrix[i][j];
@@ -115,5 +121,72 @@ fn main() {
         }
     }
 
-    println!("Counter: {counter}");
+    return counter;
+}
+
+fn get_max_viewing_distance(matrix: &Vec<Vec<u32>>) -> i32 {
+
+    let mut max_viewing_distance = 0;
+    let mut max_element: String = String::from("");
+
+    for i in 0..matrix.len() {
+        for j in 0..matrix.len() {
+            let elem = matrix[i][j];
+            //println!("Elem: {elem}");
+            let mut viewing_distance = 0;
+
+            // 1st check
+            let mut vd_top = 0;
+            if i > 0 {
+                for ii in (0..i).rev() {
+                    vd_top += 1;
+                    if matrix[ii][j] >= matrix[i][j] {
+                        break;
+                    }
+                }
+            }
+
+            // 2nd check
+            let mut vd_bottom = 0;
+            if i<matrix.len()-1 {
+                for ii in i+1..matrix.len() {
+                    vd_bottom += 1;
+                    if matrix[ii][j] >= matrix[i][j] {
+                        break;
+                    }
+                }
+            }
+
+            // 3rd check
+            let mut vd_left = 0;
+            if j > 0 {
+                for jj in (0..j).rev() {
+                    vd_left += 1;
+                    if matrix[i][jj] >= matrix[i][j] {
+                        break;
+                    }
+                }
+            }
+
+            // 4th check
+            let mut vd_right = 0;
+            if j<matrix.len()-1 {
+                for jj in j+1..matrix.len() {
+                    vd_right += 1;
+                    if matrix[i][jj] >= matrix[i][j] {
+                        break;
+                    }
+                }
+            }
+
+            viewing_distance = vd_top * vd_bottom * vd_left * vd_right;
+
+            if viewing_distance > max_viewing_distance {
+                max_viewing_distance = viewing_distance;
+                max_element = format!("elem: {0} {1}", i.to_string(), j.to_string());
+            }
+        }
+    }
+    println!("{}", max_element);
+    return max_viewing_distance;
 }
