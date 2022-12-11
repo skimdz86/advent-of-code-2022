@@ -4,7 +4,6 @@ use std::fs::File;
 use std::io::{Write, BufReader, BufRead, Error};
 use regex::Regex;
 use std::collections::LinkedList;
-use std::thread::current;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
